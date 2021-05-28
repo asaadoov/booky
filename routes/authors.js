@@ -2,7 +2,6 @@ const express = require("express")
 const Author = require('../models/author.js')
 const router = express.Router()
 
-const dd = require('dump-die')
 
 // Get all authors route
 router.get('/', async (req, res) => {
