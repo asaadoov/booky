@@ -1,0 +1,59 @@
+<h2 style="text-align: center;">Create New Author</h2> 
+<br>
+<form id="authorForm" action="/authors" method="POST">
+  <div class="author_form">
+    <%- include('./_form_fields.ejs') %> 
+    <div class="buttons">
+      <button>  
+        <a href="/authors">Cancel</a>
+      </button>
+      <button type="submit">Create</button>
+    </div>
+  </div>
+</form>
+
+<script>
+  $("#authorForm").on('submit', function (e) {
+    e.preventDefault();
+    var form = $(this);
+    let data = new FormData()
+    data.append('name', $('input[name=name]').val())
+    $.ajax({
+      url: form.attr('action'),
+      method: form.attr('method'),
+      data: JSON.stringify({name: $('input[name=name]').val()}),
+      async: true,
+      contentType: 'application/json',
+      processData: false,
+      success: function(data) {
+        if(data.status == 'success') {
+          Swal.fire({
+            title: data.title,
+            text: data.message,
+            icon: data.status,
+            showCancelButton: false,
+            closeOnConfirm: true,
+          }).then((confirm) => {
+            if(confirm.value) {
+              form.trigger('reset');
+              window.location.href = '/authors'
+            }
+          });
+        }
+        else {
+          Swal.fire({
+            title: data.title,
+            text: data.message,
+            icon: data.status,
+            showCancelButton: false,
+            closeOnConfirm: true
+          });
+        }
+      },
+      error: function() {
+        Swal.fire('Unexpected Error', 'The data cannot be sent. Please check your input.', 'error');
+      }
+    });
+});
+</script>
+
