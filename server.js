@@ -17,7 +17,14 @@ const startServer = async () => {
   
   // database connection
   try {
-    await mongoose.connect(process.env.DATABASE_URL, {useNewUrlParser: true})
+    await mongoose.connect(process.env.DATABASE_URL, {
+      server: {
+        socketOptions: {
+          socketTimeoutMS: 0,
+          connectionTimeout: 0
+        }
+      },
+      useNewUrlParser: true})
     // console.log(`Database is connected on mongodb://localhost/booky`);
   } catch (error) {
     console.error(error)    
