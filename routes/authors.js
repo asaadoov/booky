@@ -4,7 +4,7 @@ const Author = require('../models/author.js')
 const router = express.Router()
 
 const uri = process.env.DATABASE_URL
-await mongoose
+mongoose
   .connect(`${uri}`, {
     useCreateIndex: true,
     useNewUrlParser: true,
