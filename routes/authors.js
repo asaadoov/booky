@@ -1,24 +1,6 @@
 const express = require("express")
-const mongoose = require("mongoose")
 const Author = require('../models/author.js')
 const router = express.Router()
-
-const uri = process.env.DATABASE_URL
-mongoose
-  .connect(`${uri}`, {
-    useCreateIndex: true,
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false
-  })
-  .then(x => {
-    console.log(
-      `Connected to Mongo! Database name: "${x.connections[0].name}"`
-    );
-  })
-  .catch(err => {
-    console.error("Error connecting to mongo", err);
-  });
 
 // Get all authors route
 router.get('/', async (req, res) => {
