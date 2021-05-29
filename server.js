@@ -16,20 +16,19 @@ const startServer = async () => {
   const app = express()
   
   // database connection
-  try {
-    await mongoose.connect(process.env.DATABASE_URL, {
-      server: {
-        socketOptions: {
-          socketTimeoutMS: 0,
-          connectionTimeout: 0
-        }
-      },
-      useNewUrlParser: true})
-    // console.log(`Database is connected on mongodb://localhost/booky`);
-  } catch (error) {
-    console.error(error)    
-  }
-  
+  const uri = process.env.DATABASE_URL
+  await  mongoose
+    .connect(`${uri}`, {
+      useCreateIndex: true,
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useFindAndModify: false
+    })
+    .then(x => {
+      console.log(
+        `Connected to Mongo! Database name: "${x.connections[0].name}"`
+      );
+    })
   app.set('view engine', 'ejs')
   app.set('views', __dirname + '/views')
   app.set('layout', 'layouts/layout')
