@@ -16,9 +16,9 @@ router.get('/', async (req, res) => {
       searchOpt: req.query
     })
   } catch (error) {
+    console.error(error)
     res.redirect('/')
   }
-  res.render('authors/index')
 })
 
 // Get  new author route
