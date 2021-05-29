@@ -17,7 +17,7 @@ const startServer = async () => {
   
   // database connection
   const uri = process.env.DATABASE_URL
-  await  mongoose
+  await mongoose
     .connect(`${uri}`, {
       useCreateIndex: true,
       useNewUrlParser: true,
@@ -29,6 +29,10 @@ const startServer = async () => {
         `Connected to Mongo! Database name: "${x.connections[0].name}"`
       );
     })
+    .catch(err => {
+      console.error("Error connecting to mongo", err);
+    });
+
   app.set('view engine', 'ejs')
   app.set('views', __dirname + '/views')
   app.set('layout', 'layouts/layout')
