@@ -1,0 +1,56 @@
+<h2 style="text-align: center;">Login</h2> 
+<br>
+<form id="userForm" action="/auth/login" method="POST">
+  <div class="author_form">
+
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email"/>
+
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password"/>
+
+    <div class="buttons">
+      <button>  
+        <a href="/auth/register">Cancel</a>
+      </button>
+      <button type="submit">Login</button>
+    </div>
+  </div>
+</form>
+
+<script>
+  $("#userForm").on('submit', function (e) {
+    e.preventDefault();
+    var form = $(this);
+    $.ajax({
+      url: form.attr('action'),
+      method: form.attr('method'),
+      data: JSON.stringify({
+        email: $('input[name=email]').val(),
+        password: $('input[name=password]').val(),
+      }),
+      async: true,
+      contentType: 'application/json',
+      processData: false,
+      success: function(data) {
+        if(data.status == 'success') {
+          form.trigger('reset');
+          window.location.href = '/'
+        }
+        else {
+          Swal.fire({
+            title: data.title,
+            text: data.message,
+            icon: data.status,
+            showCancelButton: false,
+            closeOnConfirm: true
+          });
+        }
+      },
+      error: function() {
+        Swal.fire('Unexpected Error', 'The data cannot be sent. Please check your input.', 'error');
+      }
+    });
+});
+</script>
+

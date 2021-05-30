@@ -6,15 +6,20 @@ const express = require("express")
 const expressLayouts = require("express-ejs-layouts")
 const mongoose = require("mongoose")
 const bodyParser = require('body-parser')
+const cookieParser = require("cookie-parser")
+require('./models/user')
 
 // import routers
 const indexRouter = require("./routes/index")
 const authorRouter = require("./routes/authors")
+const authRouter = require("./routes/auth")
 
+// middlewares
+const { checkUser } = require('./middleware/authMiddleware')
 
 const startServer = async () => {
   const app = express()
-  
+
   // database connection
   const uri = process.env.DATABASE_URL
   await mongoose
@@ -22,7 +27,9 @@ const startServer = async () => {
       useCreateIndex: true,
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      useFindAndModify: false
+      useFindAndModify: false,
+      keepAlive: true,
+      socketTimeoutMS: 30000,
     })
     .then(x => {
       console.log(
@@ -40,12 +47,15 @@ const startServer = async () => {
   app.use(expressLayouts)
   app.use(express.static('public'))
   app.use(bodyParser.urlencoded({ extended: false }));
-  app.use(bodyParser.json());     
+  app.use(bodyParser.json())     
+  app.use(cookieParser())
   
   // routes
+  app.get('*', checkUser)
   app.use('/', indexRouter)
   app.use('/authors', authorRouter)
-  
+  authRouter(app)
+
   app.listen(process.env.PORT || 3021)
   console.log("Server is Running on PORT:", 3021);
 }

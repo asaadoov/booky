@@ -1,0 +1,84 @@
+<h2 style="text-align: center;">Register</h2> 
+<br>
+<form id="userForm" action="/auth/register" method="POST">
+  <div class="author_form">
+
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name"/>
+
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email"/>
+
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password"/>
+
+    <div class="buttons">
+      <button>  
+        <a href="/auth/login">Cancel</a>
+      </button>
+      <button type="submit">Register</button>
+    </div>
+  </div>
+</form>
+
+<script>
+  $("#userForm").on('submit', function (e) {
+    e.preventDefault();
+    var form = $(this);
+    $.ajax({
+      url: form.attr('action'),
+      method: form.attr('method'),
+      data: JSON.stringify({
+        name: $('input[name=name]').val(),
+        email: $('input[name=email]').val(),
+        password: $('input[name=password]').val(),
+      }),
+      async: true,
+      contentType: 'application/json',
+      processData: false,
+      success: function(data) {
+        if(data.status == 'success') {
+          Swal.fire({
+            title: data.title,
+            text: data.message,
+            icon: data.status,
+            showCancelButton: false,
+          }).then((confirm) => {
+            if(confirm.value) {
+              form.trigger('reset');
+              window.location.href = '/'
+            }
+          });
+        }
+        else if(data.status == 'error') {
+          if(!data.message.name !== ''){
+            Swal.fire({
+              title: data.title,
+              text: data.message.name,
+              icon: data.status,
+              showCancelButton: false,
+            });
+          }  else if(!data.message.email !== ' '){
+            Swal.fire({
+              title: data.title,
+              text: data.message.email,
+              icon: data.status,
+              showCancelButton: false,
+            });
+          } else if(!data.message.password !== '') {
+            Swal.fire({
+              title: data.title,
+              text: data.message.password,
+              icon: data.status,
+              showCancelButton: false,
+            });
+          } 
+        }
+      },
+      error: function() {
+        Swal.fire('Unexpected Error', 'The data cannot be sent. Please check your input.', 'error');
+      }
+    });
+});
+</script>
+

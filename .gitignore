@@ -1,2 +1,4 @@
 .env
 node_modules
+authServer.js
+/routes/user.js

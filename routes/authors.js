@@ -1,9 +1,10 @@
 const express = require("express")
 const Author = require('../models/author.js')
 const router = express.Router()
+const { requireAuth } = require('../middleware/authMiddleware')
 
 // Get all authors route
-router.get('/', async (req, res) => {
+router.get('/', requireAuth, async (req, res) => {
   try {
     let searchOpt = {}
     if(req.query.name !== null && req.query.name !== '') {
@@ -21,12 +22,12 @@ router.get('/', async (req, res) => {
 })
 
 // Get  new author route
-router.get('/create', (req, res) => {
+router.get('/create', requireAuth, (req, res) => {
   res.render('authors/create', {author: new Author()})
 })
 
 // Get  store new author route
-router.post('/',  async  (req, res) => {
+router.post('/', requireAuth, async  (req, res) => {
 
   // res.json({name: req.body})
   try {
