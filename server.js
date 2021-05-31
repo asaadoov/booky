@@ -2,21 +2,29 @@ if(process.env.NODE_ENV !== 'production'){
   require('dotenv').config()
 }
 
+// import packages
 const express = require("express")
 const expressLayouts = require("express-ejs-layouts")
 const mongoose = require("mongoose")
 const bodyParser = require('body-parser')
 const cookieParser = require("cookie-parser")
+require('express-group-routes');
+
+// models
 require('./models/user')
+require('./models/book')
 
 // import routers
 const indexRouter = require("./routes/index")
 const authorRouter = require("./routes/authors")
+const bookRouter = require("./routes/books")
 const authRouter = require("./routes/auth")
 
 // middlewares
 const { checkUser } = require('./middleware/authMiddleware')
 
+
+// start the server
 const startServer = async () => {
   const app = express()
 
@@ -52,9 +60,11 @@ const startServer = async () => {
   
   // routes
   app.get('*', checkUser)
+  app.post('*', checkUser)
   app.use('/', indexRouter)
   app.use('/authors', authorRouter)
   authRouter(app)
+  bookRouter(app)
 
   app.listen(process.env.PORT || 3021)
   console.log("Server is Running on PORT:", 3021);
