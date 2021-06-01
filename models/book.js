@@ -33,7 +33,6 @@ var bookSchema = new mongoose.Schema(
     author: {
       type: String,
       required: [true, "can't be blank"], 
-      match: [/^[a-zA-Z0-9]+$/, 'is invalid'],
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
