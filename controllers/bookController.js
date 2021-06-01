@@ -1,12 +1,7 @@
 const mongoose = require('mongoose')
 const Book = mongoose.model('Book')
-const User = mongoose.model('User')
-const fs = require('fs')
-const path = require('path')
-const { coverImageBasePath } = require('../models/book')
 
-const uploadPath = path.join('public', coverImageBasePath)
-
+const imageMimeTypes = ['image/jpeg','image/png','image/gif', 'image/jpg']
 
 // res.json({
 //   'status': 'success',
@@ -44,8 +39,6 @@ exports.getCreate = (req, res) => {
 exports.postBook = async (req, res) => {
   const userId = res.locals.user._id
   // console.log(userId);
-
-  const fileName = req.file != null ? req.file.filename : ''
   const book = new Book({
     title: req.body.title,
     author: req.body.author,
@@ -53,20 +46,26 @@ exports.postBook = async (req, res) => {
     pageCount: req.body.pageCount,
     description: req.body.description,
     author: req.body.author,
-    coverImageName: fileName,
     userId
   })
+
+  saveCover(book, req.body.cover)
   try {
     const newBook = await book.save()
     // res.redirect(`books/${newBook.id}`)
     res.redirect(`/books`)
   } catch (error) {
     console.log(error);
-    if(book.coverImageName != null){
-      fs.unlink(path.join(uploadPath, book.coverImageName), err => err ? console.log(err) : console.log('good'))
-    }
     res.redirect(`/books/create`)
   } 
 }
 
-
+function saveCover(book, coverEncoded) {
+  if(coverEncoded == null) return
+  const cover = JSON.parse(coverEncoded)
+  // console.log(cover);
+  if(cover != null && imageMimeTypes.includes(cover.type)){
+    book.coverImage = new Buffer.from(cover.data, 'base64')
+    book.coverImageType = cover.type
+  }
+}
