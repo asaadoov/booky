@@ -1,7 +1,12 @@
 const mongoose = require('mongoose')
 const Book = mongoose.model('Book')
 const User = mongoose.model('User')
-// const { coverImageBasePath } = require('../models/book')
+const fs = require('fs')
+const path = require('path')
+const { coverImageBasePath } = require('../models/book')
+
+const uploadPath = path.join('public', coverImageBasePath)
+
 
 // res.json({
 //   'status': 'success',
@@ -9,8 +14,26 @@ const User = mongoose.model('User')
 //   'message' : 'Data successfully added.',
 //   'user': user._id
 // })
-exports.getBooks = (req, res) => {
-  res.send('all books')
+exports.getBooks = async (req, res) => {
+  let query = Book.find()
+  if(req.query.title != null && req.query.title != ''){
+    query = query.regex('title', new RegExp(req.query.title, 'i'))
+  }
+  if(req.query.publishBefore != null && req.query.publishBefore != ''){
+    query = query.lte('publishDate', req.query.publishBefore)
+  }
+  if(req.query.publishAfter != null && req.query.publishAfter != ''){
+    query = query.gte('publishDate', req.query.publishAfter)
+  }
+  try {
+    const books = await query.exec()
+    res.render('books/index', {
+      books,
+      searchOpt: req.query
+    })
+  } catch (error) {
+    res.redirect('/')
+  }
 }
 
 exports.getCreate = (req, res) => {
@@ -39,6 +62,9 @@ exports.postBook = async (req, res) => {
     res.redirect(`/books`)
   } catch (error) {
     console.log(error);
+    if(book.coverImageName != null){
+      fs.unlink(path.join(uploadPath, book.coverImageName), err => err ? console.log(err) : console.log('good'))
+    }
     res.redirect(`/books/create`)
   } 
 }

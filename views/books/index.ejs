@@ -1,12 +1,42 @@
 <h2 style="text-align: center;">All Books</h2> 
 <br>
-<form action="/books" style="text-align: left;" method="GET">
-  <label for="name">Name</label>
-  <input type="text" name="name" value="<%=searchOpt.name%>"/>
+<form action="/books" style="text-align: left; width: 800px;" method="GET">
+  <div class="col-sm-12 row">
+    <div class="form-group col-sm-12">
+      <label for="name">title</label>
+      <input type="text" name="title" value="<%=searchOpt.title%>"/>
+    </div>
+  </div>
+  <div class="col-sm-12 row">
+    <div class="form-group col-sm-6">
+      <label class="form-label" for="publishAfter">Published After</label>
+      <input type="date" class="form-control" name="publishAfter" autocomplete="off"  value="<%=searchOpt.publishAfter%>"/>
+    </div>
+    <div class="form-group col-sm-6">
+      <label class="form-label" for="publishBefore">Published Before</label>
+      <input type="date" class="form-control" name="publishBefore" autocomplete="off"  value="<%=searchOpt.publishBefore%>"/>
+    </div>
+  </div>
+  
   <button type="submit" style="float: right;">Search</button>
 </form>
 <br>
-
-<% authors.forEach(author => { %> 
-  <div><%= author.name %></div>
-<% }) %>
+<div class="container" style="max-width: 835px;">
+  <div class="row row-cards" id="books">
+    <% books.forEach(book => { %>
+      <div class="col-sm-4 col-lg-4">
+        <div class="card p-2" style="height: 300px; width: 200px;">
+            <a href="javascript:void(0)" class="mb-3">
+                <img src="<%= book.coverImagePath %>" alt="" class="rounded"
+                style="height: 225px; width: 100%;">
+            </a>
+            <div class="align-items-center" id="category">
+                <span><%= book.title %>, By <%= book.author %></span>
+                <!-- <button type="button" class="btn btn-danger btn-sm pull-right"
+                        onclick="remove('.$category->id .')">Remove</button> -->
+            </div>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+</div>
