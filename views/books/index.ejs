@@ -26,17 +26,16 @@
     <% books.forEach(book => { %>
       <div class="col-sm-4 col-lg-4">
         <div class="card p-2" style="height: 400px; width: 200px;">
-            <a href="javascript:void(0)" class="mb-3">
-                <img src="<%= book.coverImagePath %>" alt="" class="rounded"
-                style="height: 225px; width: 100%;">
-            </a>
-            <div class="align-items-center" id="category">
-                <span><%= book.title %>, By <%= book.author %></span>
-                <!-- <button type="button" class="btn btn-danger btn-sm pull-right"
-                        onclick="remove('.$category->id .')">Remove</button> -->
+          <a href="javascript:void(0)" class="mb-3">
+            <img src="<%= book.coverImagePath %>" alt="" class="rounded"
+            style="height: 225px; width: 100%;">
+          </a>
+          <div class="align-items-center" id="category">
+            <span><%= book.title %>, By <%= book.author %></span>
+            <a href="/books/<%=book.id%>/" class="mt-4 btn stretched-link">Details</a>
             </div>
+          </div>
         </div>
-      </div>
     <% }) %>
   </div>
 </div>

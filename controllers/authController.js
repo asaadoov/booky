@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const User = mongoose.model('User')
 
-const maxAge = 10 *60 
+const maxAge = 30 *60 
 
 exports.getRegister = (req, res) => {
   res.render('auth/register')

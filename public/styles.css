@@ -43,9 +43,12 @@ nav li a{
   letter-spacing: 2px;
 }
 .btn{
+  /* padding: 8px 12px; */
   border-radius: 36px;
-  background: #FEE996;
+  background: #fee996;
+  vertical-align: baseline !important;
 }
+
 form h2{
   font-size: 2.4em;
   font-weight: 900;

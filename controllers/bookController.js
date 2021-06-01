@@ -21,7 +21,7 @@ exports.getBooks = async (req, res) => {
     query = query.gte('publishDate', req.query.publishAfter)
   }
   try {
-    const books = await query.exec()
+    const books = await query.populate('userId').exec()
     res.render('books/index', {
       books,
       searchOpt: req.query
@@ -58,6 +58,17 @@ exports.postBook = async (req, res) => {
     console.log(error);
     res.redirect(`/books/create`)
   } 
+}
+
+exports.getBook = async (req, res) => {
+  try {
+    const book = await Book.findById(req.params.id).populate('userId').exec()
+    const bookOwner = book.userId
+    res.render('books/show', { book, bookOwner })
+  } catch (error) {
+    console.log(error);
+    res.redirect('/')
+  }
 }
 
 function saveCover(book, coverEncoded) {

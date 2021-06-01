@@ -8,6 +8,8 @@ module.exports = bookRouter = function(app) {
     router.post("/", bookController.postBook); // /books/ 
     // GET create new book 
     router.get("/create", bookController.getCreate); // /books/create 
+    // GET show single book
+    router.get("/:id", bookController.getBook) // /books/id
 
   });
 };
