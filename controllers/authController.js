@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const User = mongoose.model('User')
 
+const maxAge = 10 *60 
+
 exports.getRegister = (req, res) => {
   res.render('auth/register')
 }
@@ -22,7 +24,6 @@ exports.register = async (req, res) => {
 
   try {
     await newUser.save()
-    const maxAge = 3 * 24 * 60 *60 
     const accessToken = generateAccessToken(newUser._id, maxAge)
     res.cookie('jwt', accessToken, { httpOnly: true, maxAge: maxAge * 1000 })
     
@@ -65,8 +66,6 @@ exports.login = async (req, res) => {
     if (!user || !user.comparePassword(req.body.password)) {
       return res.status(401).json({ message: 'Authentication failed. Invalid user or password.' });
     }
-    
-    const maxAge = 3 * 24 * 60 *60 
     const accessToken = generateAccessToken(user._id, maxAge)
     res.cookie('jwt', accessToken, { httpOnly: true, maxAge: maxAge * 1000 })
     
