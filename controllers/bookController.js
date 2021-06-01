@@ -49,11 +49,10 @@ exports.postBook = async (req, res) => {
     userId
   })
 
-  saveCover(book, req.body.cover)
+saveCover(book, req.body.cover)
   try {
     const newBook = await book.save()
-    // res.redirect(`books/${newBook.id}`)
-    res.redirect(`/books`)
+    res.redirect(`books/${newBook.id}`)
   } catch (error) {
     console.log(error);
     res.redirect(`/books/create`)
@@ -67,6 +66,67 @@ exports.getBook = async (req, res) => {
     res.render('books/show', { book, bookOwner })
   } catch (error) {
     console.log(error);
+    res.redirect('/')
+  }
+}
+
+exports.getEditBook = async (req, res) => {
+  const userId = res.locals.user._id
+  try {
+    const book = await Book.findById(req.params.id).populate('userId').exec()
+    if(toString(book.userId._id) !== userId) {
+      throw 'You are not authorized'
+      res.redirect('/')
+    }
+    res.render('books/edit', { book })
+  } catch (error) {
+    console.log(error);
+    res.redirect('/')
+  }
+}
+
+exports.putEditBook = async (req, res) => {
+  const userId = res.locals.user._id
+  let book
+  try {
+    book = await Book.findById(req.params.id).populate('userId').exec()
+    // console.log(book.userId._id , userId);
+    if(toString(book.userId._id) !== userId) {
+      throw 'You are not authorized'
+      res.redirect('/')
+    }
+    book.title = req.body.title
+    book.author = req.body.author
+    book.publishDate = new Date(req.body.publishDate)
+    book.pageCount = req.body.pageCount
+    book.description = req.body.description
+
+    if(req.body.cover != null && req.body.cover !== ''){
+      saveCover(book, req.body.cover)
+    }
+
+    await book.save()
+    res.redirect(`/books/${book.id}`)
+  } catch (error) {
+    console.log(error);
+    res.redirect('/')
+  } 
+}
+
+exports.deleteBook = async (req, res) => {
+  let book
+  const userId = res.locals.user._id
+
+  try {
+    book = await Book.findById(req.params.id).populate('userId').exec()
+    console.log(book.userId._id);
+    if(toString(book.userId._id) !== userId) {
+      throw 'You are not authorized'
+      res.redirect('/')
+    }
+    await book.remove()
+    res.redirect('/')
+  } catch (error) {
     res.redirect('/')
   }
 }

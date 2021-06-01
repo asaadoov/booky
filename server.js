@@ -8,6 +8,7 @@ const expressLayouts = require("express-ejs-layouts")
 const mongoose = require("mongoose")
 const bodyParser = require('body-parser')
 const cookieParser = require("cookie-parser")
+const methodOverride = require('method-override')
 require('express-group-routes');
 
 // models
@@ -57,7 +58,8 @@ const startServer = async () => {
   app.use(bodyParser.urlencoded({ extended: false, limit: '50mb' }));
   app.use(bodyParser.json({ limit: '50mb' }))     
   app.use(cookieParser())
-  
+  app.use(methodOverride('_method'))
+
   // routes
   app.get('*', checkUser)
   app.post('*', checkUser)

@@ -1,1 +1,14 @@
-edit author
+<h2 style="text-align: center;">Edit Book</h2> 
+<br>
+<form id="bookForm" action="/books/<%=book.id%>?_method=PUT" method="POST" style="width: 800px;">
+  <input type="hidden" name="_method" value="put" />
+  <div class="">
+    <%- include('./_form_fields.ejs') %> 
+    <div class="buttons">
+      <button>  
+        <a href="/books">Cancel</a>
+      </button>
+      <button type="submit">Update</button>
+    </div>
+  </div>
+</form>

@@ -11,9 +11,12 @@
     <span>Page Count: <%= book.pageCount %> </span> <br>
     <span class="text-capitalize">Owner: <%= bookOwner.name  %> </span> <br>
     <span>Description: <%= book.description %> </span> <br>
-    <div class="mt-4">
-      <a href="/books/<%=book.id%>/edit" class="btn" style="">Edit</a>
-      <%- include('../partials/deleteForm', { url: `/books/${book.id}` })%> 
-    </div>
+    <% if(user._id == bookOwner._id) { %> 
+      <div class="mt-4">
+        <a href="/books/<%=book.id%>/edit" class="btn" style="">Edit</a>
+        <%- include('../partials/deleteForm', { url: `/books/${book.id}` })%> 
+      </div>
+    <% } %>
+
   </div>
 </div>
