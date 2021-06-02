@@ -12,7 +12,7 @@ module.exports = bookRouter = function(app) {
     // GET create new book 
     router.get("/create", requireAuth, bookController.getCreate); // /books/create 
     // GET show single book
-    router.get("/:id", requireAuth, bookController.getBook) // /books/id
+    router.get("/:id", requireAuth, checkUser, bookController.getBook) // /books/id
     // GET Edit book
     router.get("/:id/edit", requireAuth, checkUser, bookController.getEditBook) // /books/id/edit
     // PUT Store Updated Book
